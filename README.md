@@ -26,7 +26,7 @@ This project leverages the OPSERA MCP Server (Version: dev, Deployed: 11d 2h ago
   - Compliance Score: 20% (Critical gaps identified)
   - Critical Issues: No authentication, debug mode enabled, no TLS encryption, no logging
   - Recommendations: Implement user authentication, disable debug mode, add HTTPS, configure logging
-- **Report**: Available at [SOC2 Compliance Report](compliance-audit-soc2-20260414.html)
+- **Report**: Available at [SOC2 Compliance Report](opsera_reports/compliance-audit-soc2-20260414.html)
 
 #### 2. Business Documentation Generator (`business-docs-generate`)
 - **Purpose**: Generate professional Functional Requirements Document (FRD) and Business Requirements Document (BRD) from codebase
@@ -60,7 +60,7 @@ This project leverages the OPSERA MCP Server (Version: dev, Deployed: 11d 2h ago
   - No authentication mechanisms
   - Limited input validation
   - No HTTPS configuration
-- **Report**: Available at [Security Scan Report](security-scan-report.html)
+- **Report**: Available at [Security Scan Report](opsera_reports/security-scan-report.html)
 
 ## Architecture Analysis
 
@@ -71,7 +71,7 @@ This project leverages the OPSERA MCP Server (Version: dev, Deployed: 11d 2h ago
 - **Frontend**: HTML/CSS/JavaScript
 - **Containerization**: Docker
 - **CI/CD**: Jenkins, GitHub Actions
-
+- **Report**: Available at [Architecture Report](opsera_reports/architecture-report.html)
 ### Application Structure
 ```
 app.py                 # Main Flask application
@@ -118,7 +118,7 @@ docs/                 # Generated documentation
 - Encryption: No TLS/HTTPS
 - Logging & Monitoring: Not implemented
 - Change Management: No version control security
-
+- **Report**: Available at [Compliance Scan Report](opsera_reports/compliance-audit-soc2-20260414.html)
 ### Security Posture
 - **Risk Level**: Medium
 - **Immediate Actions Required**: Fix XSS, disable debug mode
