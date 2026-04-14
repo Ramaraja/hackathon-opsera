@@ -209,4 +209,21 @@ This project is licensed under the MIT License.
 
 ---
 
-*This README was generated with OPSERA MCP Server integrations providing comprehensive security, compliance, and documentation automation.*
+## Screenshots:
+
+### Security Scan
+![image](screenshots/security-scan.png)
+
+![image](screenshots/security-scan-1.png)
+
+### Architecture
+![image](screenshots/architecture-doc.png)
+
+### Compliance Audit
+![image](screenshots/compliance-audit.png)
+
+### SQL Scan
+![image](screenshots/sql-scan.png)
+
+### Business document
+![image](screenshots/business-doc.png)
