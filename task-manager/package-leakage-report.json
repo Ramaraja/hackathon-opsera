@@ -1,0 +1,13 @@
+{
+  "tool": "package-leakage",
+  "findings": [
+    {
+      "severity": "medium",
+      "title": "Docker: No .dockerignore",
+      "description": "Entire build context sent to daemon",
+      "file": "Dockerfile",
+      "remediation": "Create .dockerignore excluding .git,.env,node_modules,*.map",
+      "ecosystem": "docker"
+    }
+  ]
+}

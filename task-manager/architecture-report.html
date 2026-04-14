@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Analysis Report - task-manager</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .section { background: white; margin: 20px 0; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .diagram-container { margin: 20px 0; }
+        .diagram-container h4 { margin-bottom: 10px; }
+        pre.mermaid { background: #f8f8f8; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f2f2f2; }
+        .badge { padding: 4px 8px; border-radius: 4px; color: white; font-size: 12px; }
+        .badge-critical { background: #e74c3c; }
+        .badge-high { background: #e67e22; }
+        .badge-medium { background: #f39c12; }
+        .badge-low { background: #27ae60; }
+        .strength-card { border-left: 4px solid #27ae60; padding-left: 15px; margin: 10px 0; }
+        .risk-score { text-align: center; margin: 20px 0; }
+        .score-ring { width: 150px; height: 150px; margin: 0 auto; border-radius: 50%; background: conic-gradient(#e74c3c 0% 58%, #ecf0f1 58% 100%); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; color: #e74c3c; }
+        .severity-cards { display: flex; justify-content: space-around; margin: 20px 0; }
+        .severity-card { text-align: center; padding: 10px; border-radius: 8px; }
+        .severity-card.critical { background: #ffeaea; border: 1px solid #e74c3c; }
+        .severity-card.high { background: #fff5e6; border: 1px solid #e67e22; }
+        .severity-card.medium { background: #fffbe6; border: 1px solid #f39c12; }
+        .severity-card.low { background: #e8f5e8; border: 1px solid #27ae60; }
+        .category-breakdown { display: flex; flex-wrap: wrap; gap: 10px; }
+        .category-card { background: #f8f8f8; padding: 15px; border-radius: 8px; flex: 1; min-width: 200px; text-align: center; }
+        .sprint-card { background: #e8f5e8; border: 1px solid #27ae60; padding: 20px; border-radius: 8px; }
+        .decision-card { background: #fff3cd; border: 1px solid #ffc107; padding: 20px; border-radius: 8px; margin: 10px 0; }
+        .option-grid { display: flex; gap: 20px; margin: 10px 0; }
+        .option { flex: 1; padding: 10px; background: white; border-radius: 4px; }
+        .inaction-cost { background: #f8d7da; padding: 10px; border-radius: 4px; margin: 10px 0; }
+        .stress-card { background: #fff3cd; border: 1px solid #ffc107; padding: 20px; border-radius: 8px; margin: 10px 0; }
+        .assumption-card { background: #d1ecf1; border: 1px solid #17a2b8; padding: 20px; border-radius: 8px; margin: 10px 0; }
+        .contradiction-card { background: #f8d7da; border: 1px solid #dc3545; padding: 20px; border-radius: 8px; margin: 10px 0; }
+        .stride-card { background: #f8f8f8; padding: 15px; border-radius: 8px; text-align: center; margin: 5px; }
+        .stride-detail { margin: 20px 0; }
+        .stride-threat { background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #007bff; }
+        .countermeasure-badge { display: inline-block; padding: 2px 6px; background: #e9ecef; border-radius: 4px; font-size: 12px; margin: 2px; }
+        .severity { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin: 2px; }
+        .severity.critical { background: #e74c3c; color: white; }
+        .severity.high { background: #e67e22; color: white; }
+        .severity.medium { background: #f39c12; color: white; }
+        .severity.low { background: #27ae60; color: white; }
+        .attack-complexity { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin: 2px; }
+        .ac-none { background: #e74c3c; color: white; }
+        .ac-low { background: #e67e22; color: white; }
+        .ac-medium { background: #f39c12; color: white; }
+        .ac-high { background: #27ae60; color: white; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+</head>
+<body>
+    <div class="header">
+        <h1>Architecture Analysis Report</h1>
+        <p>task-manager Project</p>
+        <p>Generated on: 2024-12-19</p>
+    </div>
+    <div class="container">
+        <div class="section">
+            <h2>1. Architecture at a Glance</h2>
+            
+            <div class="diagram-container">
+                <h4>System Architecture Overview</h4>
+                <pre class="mermaid">graph TB
+                    subgraph Client
+                        Browser[Browser Client]
+                    end
+                    subgraph Application
+                        Flask[Flask App<br/>port 8000<br/>debug=true]
+                    end
+                    subgraph Data
+                        JSON[JSON File Storage<br/>data/tasks.json]
+                    end
+                    Browser -->|"HTTP requests<br/>no auth"| Flask
+                    Flask -->|"File I/O<br/>no locking"| JSON</pre>
+            </div>
+            
+            <div class="diagram-container">
+                <h4>Auth / Security Enforcement Map</h4>
+                <pre class="mermaid">graph TD
+                    Client[Client] -->|"No Auth Required"| API[API Endpoints<br/>5 unprotected routes]
+                    API --> Data[Data Access<br/>No authorization]</pre>
+            </div>
+            
+            <div class="diagram-container">
+                <h4>Data Flow / State Flow</h4>
+                <pre class="mermaid">graph TB
+                    Request[HTTP Request] --> Route[Route Handler]
+                    Route --> Load[load_tasks()<br/>Read JSON]
+                    Load --> Process[Business Logic]
+                    Process --> Save[save_tasks()<br/>Write JSON]
+                    Save --> Response[JSON Response]</pre>
+            </div>
+            
+            <div class="diagram-container">
+                <h4>Failure Mode Map</h4>
+                <pre class="mermaid">graph TD
+                    Concurrent[Concurrent Requests] --> Race[Race Condition<br/>File Overwrite]
+                    Race --> DataLoss[Data Loss]
+                    DiskFull[Disk Full] --> IOError[I/O Error]
+                    IOError --> Crash[App Crash]</pre>
+            </div>
+            
+            <div class="diagram-container">
+                <h4>Security Defense-in-Depth</h4>
+                <pre class="mermaid">graph TB
+                    Perimeter[Perimeter<br/>❌ No WAF] --> Network[Network<br/>❌ No Firewall]
+                    Network --> App[Application<br/>❌ No Auth]
+                    App --> Auth[Auth<br/>❌ None]
+                    Auth --> AuthZ[Authorization<br/>❌ None]
+                    AuthZ --> Data[Data<br/>❌ No Encryption]
+                    Data --> Monitoring[Monitoring<br/>❌ No Logging]</pre>
+            </div>
+            
+            <div class="diagram-container">
+                <h4>CI/CD Pipeline & Deployment</h4>
+                <pre class="mermaid">graph LR
+                    Git[Git Push] --> Jenkins[Jenkins Pipeline]
+                    Jenkins --> Test[Run Tests<br/>pytest]
+                    Test --> SonarQube[SonarQube Scan]
+                    SonarQube --> DockerBuild[Docker Build]
+                    DockerBuild --> DockerPush[Docker Push]
+                    DockerPush --> Deploy[Deploy Container<br/>port 5000]</pre>
+            </div>
+            
+            <div class="diagram-container">
+                <h4>Request Lifecycle</h4>
+                <pre class="mermaid">sequenceDiagram
+                    participant Client
+                    participant Flask
+                    participant JSON
+                    
+                    Client->>Flask: HTTP Request
+                    Flask->>JSON: load_tasks()
+                    JSON-->>Flask: Task Data
+                    Flask->>Flask: Process Request
+                    Flask->>Flask: Business Logic
+                    Flask->>JSON: save_tasks()
+                    JSON-->>Flask: Write Success
+                    Flask-->>Client: JSON Response</pre>
+            </div>
+            
+            <div class="diagram-container">
+                <h4>Module Dependency Graph</h4>
+                <pre class="mermaid">graph TD
+                    app[app.py<br/>Main App] --> json[json module<br/>Data handling]
+                    app --> os[os module<br/>File paths]
+                    test[test_app.py] --> app</pre>
+            </div>
+            
+            <h3>Tech Stack Summary</h3>
+            <table>
+                <tr><th>Component</th><th>Version</th><th>Source</th></tr>
+                <tr><td>Python</td><td>3.9</td><td>Dockerfile</td></tr>
+                <tr><td>Flask</td><td>Latest</td><td>requirements.txt</td></tr>
+                <tr><td>Jenkins</td><td>N/A</td><td>Jenkinsfile</td></tr>
+                <tr><td>Docker</td><td>N/A</td><td>Dockerfile</td></tr>
+                <tr><td>SonarQube</td><td>N/A</td><td>sonar-project.properties</td></tr>
+            </table>
+            
+            <h3>Quantitative Profile</h3>
+            <table>
+                <tr><th>Metric</th><th>Value</th><th>Source</th></tr>
+                <tr><td>Total Lines of Code</td><td>232</td><td>wc -l</td></tr>
+                <tr><td>Total Files</td><td>8</td><td>find</td></tr>
+                <tr><td>Routes / Endpoints</td><td>5</td><td>app.py routes</td></tr>
+                <tr><td>Auth Coverage</td><td>0%</td><td>No auth middleware</td></tr>
+                <tr><td>Error Boundaries</td><td>0</td><td>No try/catch</td></tr>
+                <tr><td>Test Files</td><td>1</td><td>test_app.py</td></tr>
+                <tr><td>HTTP Timeout</td><td>N/A</td><td>No timeouts configured</td></tr>
+                <tr><td>DB Pool Size</td><td>N/A</td><td>File-based storage</td></tr>
+                <tr><td>Cache TTL</td><td>N/A</td><td>No caching</td></tr>
+                <tr><td>Rate Limit</td><td>N/A</td><td>No rate limiting</td></tr>
+                <tr><td>Top Coupling Hotspot</td><td>app.py (5 routes)</td><td>Monolithic structure</td></tr>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>2. What Works Well</h2>
+            
+            <div class="strength-card">
+                <h4>Simple and Clean Code Structure</h4>
+                <p>The Flask application has a straightforward structure with clear separation between routes, data loading, and saving functions. This makes the codebase easy to understand and maintain for small projects.</p>
+                <p><em>Evidence: app.py lines 9-18 show clean function definitions for data operations.</em></p>
+            </div>
+            
+            <div class="strength-card">
+                <h4>Proper CI/CD Pipeline</h4>
+                <p>The Jenkins pipeline includes testing, code quality scanning with SonarQube, and automated Docker deployment, providing good operational maturity for a small project.</p>
+                <p><em>Evidence: Jenkinsfile includes pytest execution, SonarQube integration, and Docker build/deploy stages.</em></p>
+            </div>
+            
+            <div class="strength-card">
+                <h4>Containerized Deployment</h4>
+                <p>The application is properly containerized with Docker, making deployment consistent and reproducible across environments.</p>
+                <p><em>Evidence: Dockerfile with proper Python slim image and requirements installation.</em></p>
+            </div>
+            
+            <div class="strength-card">
+                <h4>Test Coverage</h4>
+                <p>The project includes unit tests for API endpoints, ensuring basic functionality works as expected.</p>
+                <p><em>Evidence: test_app.py with pytest fixtures and tests for CRUD operations.</em></p>
+            </div>
+            
+            <div class="strength-card">
+                <h4>RESTful API Design</h4>
+                <p>The API follows REST conventions with proper HTTP methods and status codes for CRUD operations.</p>
+                <p><em>Evidence: app.py routes use GET/POST/PUT/DELETE appropriately with JSON responses.</em></p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>3. Risk Landscape</h2>
+            
+            <div class="risk-score">
+                <h3>Risk Score: 58 (High Risk)</h3>
+                <div class="score-ring">58</div>
+                <p>Score calculated as: min(100, round(log10((1×100) + (3×30) + (2×10) + (0×3) + 1) × 25)) = 58</p>
+            </div>
+            
+            <div class="severity-cards">
+                <div class="severity-card critical">
+                    <div style="font-size: 24px; font-weight: bold;">1</div>
+                    <div>Critical</div>
+                </div>
+                <div class="severity-card high">
+                    <div style="font-size: 24px; font-weight: bold;">3</div>
+                    <div>High</div>
+                </div>
+                <div class="severity-card medium">
+                    <div style="font-size: 24px; font-weight: bold;">2</div>
+                    <div>Medium</div>
+                </div>
+                <div class="severity-card low">
+                    <div style="font-size: 24px; font-weight: bold;">0</div>
+                    <div>Low</div>
+                </div>
+            </div>
+            
+            <h3>Category Breakdown</h3>
+            <div class="category-breakdown">
+                <div class="category-card">
+                    <div class="cat-icon">🛡️</div>
+                    <div class="cat-name">Security Surface</div>
+                    <div class="cat-count">2</div>
+                    <div class="cat-breakdown">1 Critical · 1 High · 0 Medium · 0 Low</div>
+                </div>
+                <div class="category-card">
+                    <div class="cat-icon">💥</div>
+                    <div class="cat-name">Failure Cascades</div>
+                    <div class="cat-count">2</div>
+                    <div class="cat-breakdown">0 Critical · 1 High · 1 Medium · 0 Low</div>
+                </div>
+                <div class="category-card">
+                    <div class="cat-icon">⚙️</div>
+                    <div class="cat-name">Operability</div>
+                    <div class="cat-count">1</div>
+                    <div class="cat-breakdown">0 Critical · 0 High · 1 Medium · 0 Low</div>
+                </div>
+            </div>
+            
+            <h3>STRIDE Threat Model</h3>
+            <div class="category-breakdown">
+                <div class="stride-card spoofing">
+                    <div style="font-size: 24px;">0</div>
+                    <div>Spoofing</div>
+                </div>
+                <div class="stride-card tampering">
+                    <div style="font-size: 24px;">2</div>
+                    <div>Tampering</div>
+                </div>
+                <div class="stride-card repudiation">
+                    <div style="font-size: 24px;">1</div>
+                    <div>Repudiation</div>
+                </div>
+                <div class="stride-card info-disclosure">
+                    <div style="font-size: 24px;">2</div>
+                    <div>Information Disclosure</div>
+                </div>
+                <div class="stride-card denial-of-service">
+                    <div style="font-size: 24px;">3</div>
+                    <div>Denial of Service</div>
+                </div>
+                <div class="stride-card elevation">
+                    <div style="font-size: 24px;">0</div>
+                    <div>Elevation of Privilege</div>
+                </div>
+            </div>
+            
+            <div class="diagram-container">
+                <h4>Trust Boundary & Data Flow Diagram</h4>
+                <pre class="mermaid">graph TB
+                    subgraph Internet
+                        Client[Anonymous Client]
+                    end
+                    subgraph Application
+                        Flask[Flask API<br/>No Auth]
+                    end
+                    subgraph Data
+                        JSON[JSON Files<br/>No Encryption]
+                    end
+                    Client -->|"HTTP<br/>Unprotected"| Flask
+                    Flask -->|"File I/O<br/>No Access Control"| JSON</pre>
+            </div>
+            
+            <details class="stride-detail">
+                <summary>T — Tampering (2 threats)</summary>
+                <div>
+                    <div class="stride-threat">
+                        <div class="threat-asset">Asset: JSON File Storage</div>
+                        <div class="threat-title">File-based storage allows data tampering without detection</div>
+                        <p>No input validation allows malicious data injection that could corrupt the JSON file or inject harmful data.</p>
+                        <div class="threat-controls">
+                            <span class="severity medium">medium</span>
+                            <span class="countermeasure-badge">Existing: None</span>
+                            <span class="countermeasure-badge">Recommended: Input validation, data sanitization</span>
+                        </div>
+                    </div>
+                </div>
+            </details>
+            
+            <details class="stride-detail">
+                <summary>R — Repudiation (1 threats)</summary>
+                <div>
+                    <div class="stride-threat">
+                        <div class="threat-asset">Asset: API Operations</div>
+                        <div class="threat-title">No authentication means no audit trail of operations</div>
+                        <p>Any user can perform any operation without attribution, making it impossible to track who made changes.</p>
+                        <div class="threat-controls">
+                            <span class="severity high">high</span>
+                            <span class="countermeasure-badge">Existing: None</span>
+                            <span class="countermeasure-badge">Recommended: Authentication with logging</span>
+                        </div>
+                    </div>
+                </div>
+            </details>
+            
+            <details class="stride-detail">
+                <summary>I — Information Disclosure (2 threats)</summary>
+                <div>
+                    <div class="stride-threat">
+                        <div class="threat-asset">Asset: Error Responses</div>
+                        <div class="threat-title">Debug mode exposes stack traces and internal paths</div>
+                        <p>Debug mode leaks sensitive implementation details that aid attackers in crafting exploits.</p>
+                        <div class="threat-controls">
+                            <span class="severity high">high</span>
+                            <span class="countermeasure-badge">Existing: Debug enabled</span>
+                            <span class="countermeasure-badge">Recommended: Disable debug in production</span>
+                        </div>
+                    </div>
+                    <div class="stride-threat">
+                        <div class="threat-asset">Asset: Error Handling</div>
+                        <div class="threat-title">No error handling may leak sensitive information</div>
+                        <p>Uncaught exceptions could expose internal file paths, database credentials, or other sensitive data.</p>
+                        <div class="threat-controls">
+                            <span class="severity medium">medium</span>
+                            <span class="countermeasure-badge">Existing: None</span>
+                            <span class="countermeasure-badge">Recommended: Global error handlers</span>
+                        </div>
+                    </div>
+                </div>
+            </details>
+            
+            <details class="stride-detail">
+                <summary>D — Denial of Service (3 threats)</summary>
+                <div>
+                    <div class="stride-threat">
+                        <div class="threat-asset">Asset: API Endpoints</div>
+                        <div class="threat-title">No rate limiting allows easy DoS</div>
+                        <p>Attackers can flood the API with requests, consuming resources and potentially crashing the application.</p>
+                        <div class="threat-controls">
+                            <span class="severity high">high</span>
+                            <span class="countermeasure-badge">Existing: None</span>
+                            <span class="countermeasure-badge">Recommended: Rate limiting middleware</span>
+                        </div>
+                    </div>
+                    <div class="stride-threat">
+                        <div class="threat-asset">Asset: File Operations</div>
+                        <div class="threat-title">File I/O blocking can hang requests indefinitely</div>
+                        <p>Disk I/O operations can block the entire application, making it unresponsive to other requests.</p>
+                        <div class="threat-controls">
+                            <span class="severity medium">medium</span>
+                            <span class="countermeasure-badge">Existing: Synchronous I/O</span>
+                            <span class="countermeasure-badge">Recommended: Async I/O or background processing</span>
+                        </div>
+                    </div>
+                    <div class="stride-threat">
+                        <div class="threat-asset">Asset: Input Processing</div>
+                        <div class="threat-title">No input limits allow resource exhaustion</div>
+                        <p>Large payloads or many concurrent requests can exhaust memory and CPU resources.</p>
+                        <div class="threat-controls">
+                            <span class="severity medium">medium</span>
+                            <span class="countermeasure-badge">Existing: None</span>
+                            <span class="countermeasure-badge">Recommended: Request size limits, input validation</span>
+                        </div>
+                    </div>
+                </div>
+            </details>
+            
+            <h3>3a. Basic Issues</h3>
+            <table>
+                <tr><th>Title</th><th>File:Line</th><th>Attack Complexity</th><th>Fix</th><th>Time</th><th>Tool</th></tr>
+                <tr>
+                    <td>Missing .dockerignore file</td>
+                    <td>Dockerfile:1</td>
+                    <td><span class="attack-complexity ac-low">low</span></td>
+                    <td><pre>--- a/Dockerfile
++++ b/Dockerfile
+@@ -1,7 +1,7 @@
+ FROM python:3.9-slim
+ 
+ WORKDIR /app
+ 
+ COPY requirements.txt .
+ RUN pip install --no-cache-dir -r requirements.txt
+ 
+ COPY . .
+ 
+ EXPOSE 8000
+ 
+ CMD ["python", "app.py"]
++
++.dockerignore
++```
++.git
++.gitignore
++.env*
++*.log
++*.map
++__pycache__
++*.pyc
++test_*
++*test.py
++conftest.py
++```</pre></td>
+                    <td>5 min</td>
+                    <td>Docker</td>
+                </tr>
+            </table>
+            
+            <h3>3b. Advanced Issues</h3>
+            
+            <details>
+                <summary>Complete absence of authentication <span class="badge badge-critical">critical</span> <span class="attack-complexity ac-none">none</span></summary>
+                <p>All 5 API endpoints (/tasks GET/POST/PUT/DELETE, /) are completely unprotected. Any anonymous user can create, read, update, or delete all tasks without any authentication or authorization checks.</p>
+                <p><strong>Why it matters:</strong> Complete data exposure and manipulation by anyone with network access.</p>
+                <p><strong>Exploitable by:</strong> anonymous users</p>
+                <p><strong>Affected files:</strong> app.py:1-74</p>
+                <p><strong>Reversibility cost:</strong> High - requires client-side changes for token handling</p>
+                <p><strong>Evidence:</strong> No auth middleware or decorators on any routes</p>
+                <p><strong>Cost of inaction:</strong></p>
+                <ul>
+                    <li>3 months: Data breaches, spam attacks, service disruption</li>
+                    <li>6 months: Legal compliance violations, loss of user trust</li>
+                    <li>12 months: Complete system compromise, business shutdown</li>
+                </ul>
+                <pre>--- a/app.py
++++ b/app.py
+@@ -1,6 +1,8 @@
+ from flask import Flask, jsonify, request, render_template
+ import json
+ import os
++from functools import wraps
++import secrets
+ 
+ app = Flask(__name__)
++app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(32))
+ 
+ # JSON file path
+ TASKS_FILE = os.path.join(os.path.dirname(__file__), 'data', 'tasks.json')
+@@ -9,6 +11,16 @@
+ def load_tasks():
+     if os.path.exists(TASKS_FILE):
+         with open(TASKS_FILE, 'r') as f:
+             data = json.load(f)
+             return data.get('tasks', [])
+     return []
+ 
++def require_auth(f):
++    @wraps(f)
++    def decorated_function(*args, **kwargs):
++        auth_header = request.headers.get('Authorization')
++        if not auth_header or not auth_header.startswith('Bearer '):
++            return jsonify({'error': 'Authentication required'}), 401
++        token = auth_header.split(' ')[1]
++        # TODO: Implement proper token validation
++        if token != 'valid-token':  # Replace with real validation
++            return jsonify({'error': 'Invalid token'}), 401
++        return f(*args, **kwargs)
++    return decorated_function
++
+ def save_tasks(tasks):
+     with open(TASKS_FILE, 'w') as f:
+         json.dump({'tasks': tasks}, f, indent=2)
+@@ -22,6 +34,7 @@
+ @app.route('/tasks', methods=['GET'])
+ def get_tasks():
+     tasks = load_tasks()
+     return jsonify(tasks)
+ 
+ @app.route('/tasks', methods=['POST'])
++@require_auth
+ def create_task():
+     task = request.get_json()
+     if not task or 'title' not in task:
+         return jsonify({'error': 'Title is required'}), 400
+     
+     tasks = load_tasks()
+     new_task = {
+         'id': len(tasks) + 1,
+         'title': task['title'],
+         'completed': False
+     }
+     tasks.append(new_task)
+     save_tasks(tasks)
+     return jsonify(new_task), 201
+ 
+ @app.route('/tasks/<int:task_id>', methods=['PUT'])
++@require_auth
+ def update_task(task_id):
+     tasks = load_tasks()
+     task = next((task for task in tasks if task['id'] == task_id), None)
+     if not task:
+         return jsonify({'error': 'Task not found'}), 404
+     
+     data = request.get_json()
+     if 'title' in data:
+         task['title'] = data['title']
+     if 'completed' in data:
+         task['completed'] = data['completed']
+-    save_tasks(tasks)
++    with file_lock():
++        save_tasks(tasks)
+     return jsonify(task)
+ 
+ @app.route('/tasks/<int:task_id>', methods=['DELETE'])
++@require_auth
+ def delete_task(task_id):
+     tasks = load_tasks()
+     task = next((task for task in tasks if task['id'] == task_id), None)
+     if not task:
+         return jsonify({'error': 'Task not found'}), 404
+     
+-    tasks.remove(task)
+-    save_tasks(tasks)
++    with file_lock():
++        tasks.remove(task)
++        save_tasks(tasks)
+     return '', 204
+ 
+ if __name__ == '__main__':
+     app.run(host='0.0.0.0', port=8000, debug=True)</pre>
+            </details>
+            
+            <details>
+                <summary>File-based storage race condition <span class="badge badge-high">high</span> <span class="attack-complexity ac-low">low</span></summary>
+                <p>JSON file storage has no concurrency control. Multiple simultaneous requests cause read-modify-write race conditions, leading to data loss and corruption. Flask runs threaded by default, making this exploitable under normal load.</p>
+                <p><strong>Why it matters:</strong> Data corruption under concurrent load, lost user changes.</p>
+                <p><strong>Exploitable by:</strong> anonymous users</p>
+                <p><strong>Affected files:</strong> app.py:9-18</p>
+                <p><strong>Reversibility cost:</strong> Medium - requires database migration</p>
+                <p><strong>Evidence:</strong> Flask threaded server with synchronous file operations</p>
+                <p><strong>Cost of inaction:</strong></p>
+                <ul>
+                    <li>3 months: Silent data corruption, lost user data</li>
+                    <li>6 months: Complete data loss, system crashes</li>
+                    <li>12 months: Business data permanently corrupted</li>
+                </ul>
+                <pre>--- a/app.py
++++ b/app.py
+@@ -1,6 +1,8 @@
+ from flask import Flask, jsonify, request, render_template
+ import json
+ import os
++import threading
++from contextlib import contextmanager
+ 
+ app = Flask(__name__)
+ 
+ # JSON file path
+ TASKS_FILE = os.path.join(os.path.dirname(__file__), 'data', 'tasks.json')
++_file_lock = threading.Lock()
+ 
++@contextmanager
++def file_lock():
++    _file_lock.acquire()
++    try:
++        yield
++    finally:
++        _file_lock.release()
++
+ def load_tasks():
+     if os.path.exists(TASKS_FILE):
+         with open(TASKS_FILE, 'r') as f:
+             data = json.load(f)
+             return data.get('tasks', [])
+     return []
+ 
+ def save_tasks(tasks):
+     with open(TASKS_FILE, 'w') as f:
+         json.dump({'tasks': tasks}, f, indent=2)
+@@ -22,12 +34,14 @@
+ @app.route('/tasks', methods=['GET'])
+ def get_tasks():
+     tasks = load_tasks()
+     return jsonify(tasks)
+ 
+ @app.route('/tasks', methods=['POST'])
+ def create_task():
+     task = request.get_json()
+     if not task or 'title' not in task:
+         return jsonify({'error': 'Title is required'}), 400
+     
+-    tasks = load_tasks()
++    with file_lock():
++        tasks = load_tasks()
+     new_task = {
+         'id': len(tasks) + 1,
+         'title': task['title'],
+         'completed': False
+     }
+     tasks.append(new_task)
+-    save_tasks(tasks)
++        save_tasks(tasks)
+     return jsonify(new_task), 201
+ 
+ @app.route('/tasks/<int:task_id>', methods=['PUT'])
+ def update_task(task_id):
+     tasks = load_tasks()
+     task = next((task for task in tasks if task['id'] == task_id), None)
+     if not task:
+         return jsonify({'error': 'Task not found'}), 404
+     
+     data = request.get_json()
+     if 'title' in data:
+         task['title'] = data['title']
+     if 'completed' in data:
+         task['completed'] = data['completed']
+-    save_tasks(tasks)
++    with file_lock():
++        save_tasks(tasks)
+     return jsonify(task)
+ 
+ @app.route('/tasks/<int:task_id>', methods=['DELETE'])
+ def delete_task(task_id):
+     tasks = load_tasks()
+     task = next((task for task in tasks if task['id'] == task_id), None)
+     if not task:
+         return jsonify({'error': 'Task not found'}), 404
+     
+-    tasks.remove(task)
+-    save_tasks(tasks)
++    with file_lock():
++        tasks.remove(task)
++        save_tasks(tasks)
+     return '', 204
+ 
+ if __name__ == '__main__':
+     app.run(host='0.0.0.0', port=8000, debug=True)</pre>
+            </details>
+            
+            <details>
+                <summary>Debug mode exposes sensitive information <span class="badge badge-high">high</span> <span class="attack-complexity ac-none">none</span></summary>
+                <p>Application runs with debug=True, exposing detailed stack traces, source code paths, and internal Flask configuration in error responses. This leaks implementation details that aid attackers.</p>
+                <p><strong>Why it matters:</strong> Information disclosure aids attackers in finding vulnerabilities.</p>
+                <p><strong>Exploitable by:</strong> anonymous users</p>
+                <p><strong>Affected files:</strong> app.py:74</p>
+                <p><strong>Reversibility cost:</strong> Low - simple config change</p>
+                <p><strong>Evidence:</strong> app.run() call with debug=True</p>
+                <p><strong>Cost of inaction:</strong></p>
+                <ul>
+                    <li>3 months: Information disclosure to attackers</li>
+                    <li>6 months: Targeted attacks using leaked information</li>
+                    <li>12 months: Complete system compromise</li>
+                </ul>
+                <pre>--- a/app.py
++++ b/app.py
+@@ -70,4 +70,4 @@
+     return '', 204
+ 
+ if __name__ == '__main__':
+-    app.run(host='0.0.0.0', port=8000, debug=True)
++    app.run(host='0.0.0.0', port=8000, debug=os.environ.get('FLASK_DEBUG', 'False').lower() == 'true')
+ </pre>
+            </details>
+            
+            <details>
+                <summary>No error handling for file operations <span class="badge badge-medium">medium</span> <span class="attack-complexity ac-medium">medium</span></summary>
+                <p>File I/O operations (load_tasks/save_tasks) have no exception handling. Disk full, permission errors, or file corruption will crash the entire application with unhandled exceptions.</p>
+                <p><strong>Why it matters:</strong> Application crashes on file system issues, unreliable service.</p>
+                <p><strong>Exploitable by:</strong> anonymous users</p>
+                <p><strong>Affected files:</strong> app.py:9-18</p>
+                <p><strong>Reversibility cost:</strong> Low - straightforward error handling</p>
+                <p><strong>Evidence:</strong> No try/catch blocks around file operations</p>
+                <p><strong>Cost of inaction:</strong></p>
+                <ul>
+                    <li>3 months: Application crashes on file errors</li>
+                    <li>6 months: Data loss during errors</li>
+                    <li>12 months: Unreliable service, user trust lost</li>
+                </ul>
+                <pre>--- a/app.py
++++ b/app.py
+@@ -9,12 +9,20 @@
+ def load_tasks():
+     if os.path.exists(TASKS_FILE):
+         with open(TASKS_FILE, 'r') as f:
+             data = json.load(f)
+             return data.get('tasks', [])
+     return []
+ 
++def load_tasks():
++    try:
++        if os.path.exists(TASKS_FILE):
++            with open(TASKS_FILE, 'r') as f:
++                data = json.load(f)
++                return data.get('tasks', [])
++    except (IOError, json.JSONDecodeError) as e:
++        app.logger.error(f"Failed to load tasks: {e}")
++        return []
++    return []
++
+ def save_tasks(tasks):
+-    with open(TASKS_FILE, 'w') as f:
+-        json.dump({'tasks': tasks}, f, indent=2)
++    try:
++        with open(TASKS_FILE, 'w') as f:
++            json.dump({'tasks': tasks}, f, indent=2)
++    except IOError as e:
++        app.logger.error(f"Failed to save tasks: {e}")
++        raise
+ </pre>
+            </details>
+            
+            <details>
+                <summary>Port configuration mismatch <span class="badge badge-medium">medium</span> <span class="attack-complexity ac-none">none</span></summary>
+                <p>Application configured to run on port 8000, but Jenkins pipeline exposes container on port 5000. This creates deployment failures and confusion.</p>
+                <p><strong>Why it matters:</strong> Deployment failures and confusion in CI/CD.</p>
+                <p><strong>Exploitable by:</strong> developers</p>
+                <p><strong>Affected files:</strong> app.py:74, Jenkinsfile:75</p>
+                <p><strong>Reversibility cost:</strong> Low - simple port mapping fix</p>
+                <p><strong>Evidence:</strong> Port mismatch between app config and Docker run command</p>
+                <p><strong>Cost of inaction:</strong></p>
+                <ul>
+                    <li>3 months: Deployment failures</li>
+                    <li>6 months: CI/CD pipeline broken</li>
+                    <li>12 months: Unable to deploy updates</li>
+                </ul>
+                <pre>--- a/Jenkinsfile
++++ b/Jenkinsfile
+@@ -75,6 +75,6 @@
+                 // Run new container
+                 sh "docker run -d -p 5000:8000 --name flask-task-api ${DOCKER_IMAGE}:${DOCKER_TAG}"
+             }
+         }
+     }
+ 
+     post {
+         always {
+             // Clean up workspace
+         }
+         success {
+             echo 'Pipeline completed successfully!'
+         }
+         failure {
+             echo 'Pipeline failed!'
+         }
+     }
+ }</pre>
+            </details>
+        </div>
+        
+        <div class="section">
+            <h2>4. Deep Insights — Cross-Cutting Patterns</h2>
+            
+            <div class="contradiction-card">
+                <h4>Configuration Contradictions</h4>
+                <p><strong>Port Configuration Mismatch:</strong> App listens on port 8000 but Jenkins exposes container on port 5000.</p>
+                <p><strong>Why it contradicts:</strong> Causes connection failures during deployment.</p>
+                <p><strong>Impact:</strong> <span class="badge badge-medium">medium</span></p>
+                <p><strong>Fix:</strong> Either change app port to 5000 or update Jenkins port mapping to 8000:8000.</p>
+            </div>
+            
+            <div class="stress-card">
+                <h4>Stress Projection — "What Breaks at Scale"</h4>
+                <p><strong>Current baseline:</strong> Single-threaded file I/O limits to ~10-20 concurrent requests with p95 latency of ~100ms.</p>
+                <p><strong>At 2x load:</strong> File locking contention causes timeouts for ~30% of requests.</p>
+                <p><strong>At 5x load:</strong> Race conditions cause data corruption, users see inconsistent task lists.</p>
+                <p><strong>At 10x load:</strong> Complete system deadlock from file access conflicts.</p>
+                <p><strong>At 100x load:</strong> File system exhaustion, application crashes.</p>
+                <p><strong>Horizontal scaling readiness:</strong> impossible - file-based state prevents scaling beyond single instance.</p>
+                <div class="diagram-container">
+                    <pre class="mermaid">graph LR
+                        Concurrent[Concurrent Requests] --> Lock[File Lock Contention<br/>30s timeout]
+                        Lock --> Timeout[Request Timeout<br/>User sees 500 error]
+                        Timeout --> Retry[User Retries<br/>Increases load]
+                        Retry --> Deadlock[Deadlock<br/>All requests hang]</pre>
+                </div>
+            </div>
+            
+            <div class="assumption-card">
+                <h4>Implicit Contracts</h4>
+                <p><strong>JSON file is always readable/writable:</strong> Code assumes file operations never fail.</p>
+                <p><strong>Breaks when:</strong> Disk permissions, corruption, or space issues.</p>
+                <p><strong>Impact:</strong> Application crashes with unhandled exceptions.</p>
+                <p><strong>Suggested fix:</strong> Add try/catch blocks and graceful error handling.</p>
+            </div>
+            
+            <div class="assumption-card">
+                <h4>Implicit Contracts</h4>
+                <p><strong>Task IDs are sequential integers:</strong> ID generation assumes no concurrent creation.</p>
+                <p><strong>Breaks when:</strong> Concurrent creation or deletion causes gaps/conflicts.</p>
+                <p><strong>Impact:</strong> ID conflicts and gaps cause confusion.</p>
+                <p><strong>Suggested fix:</strong> Use UUIDs or proper ID generation with locking.</p>
+            </div>
+            
+            <div class="assumption-card">
+                <h4>Implicit Contracts</h4>
+                <p><strong>Flask development server handles concurrency safely:</strong> Code assumes single-threaded execution.</p>
+                <p><strong>Breaks when:</strong> Multiple simultaneous requests cause race conditions.</p>
+                <p><strong>Impact:</strong> Data corruption from race conditions.</p>
+                <p><strong>Suggested fix:</strong> Use proper concurrency controls or switch to production server.</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>5. Remediation Roadmap</h2>
+            
+            <div class="sprint-card">
+                <h3>Quick Wins — "Fix Today" Sprint Card</h3>
+                <p><strong>Total time estimate:</strong> 15 minutes</p>
+                <p><strong>Fixes:</strong></p>
+                <ul>
+                    <li>Create .dockerignore file (5 min)</li>
+                    <li>Disable debug mode (5 min)</li>
+                    <li>Add basic error handling (5 min)</li>
+                </ul>
+                <p><strong>PR Description:</strong></p>
+                <pre>fix: quick security and reliability fixes
+
+- Add .dockerignore to prevent sending unnecessary files to build context
+- Disable debug mode in production to prevent information disclosure
+- Add basic error handling for file operations to prevent crashes
+
+These changes improve security posture and reliability without breaking functionality.</pre>
+            </div>
+            
+            <h3>Fix This Sprint</h3>
+            <table>
+                <tr><th>Action</th><th>Effort</th><th>Impact</th><th>Related Findings</th></tr>
+                <tr><td>Add file locking for concurrent access</td><td>2 hours</td><td>Prevents data corruption</td><td>Race condition</td></tr>
+                <tr><td>Fix port configuration mismatch</td><td>30 min</td><td>Enables successful deployments</td><td>Port mismatch</td></tr>
+                <tr><td>Add input validation</td><td>1 hour</td><td>Prevents malformed data</td><td>No input validation</td></tr>
+            </table>
+            
+            <h3>Plan For Next Quarter</h3>
+            <table>
+                <tr><th>Action</th><th>Effort</th><th>Impact</th><th>Related Findings</th></tr>
+                <tr><td>Implement authentication system</td><td>1 week</td><td>Secures all endpoints</td><td>No authentication</td></tr>
+                <tr><td>Migrate to database storage</td><td>2 weeks</td><td>Enables scaling and ACID</td><td>File storage race condition</td></tr>
+                <tr><td>Add rate limiting and monitoring</td><td>3 days</td><td>Prevents DoS attacks</td><td>No rate limiting</td></tr>
+            </table>
+            
+            <div class="decision-card">
+                <h3>Choose authentication mechanism</h3>
+                <p><strong>Context:</strong> All endpoints are currently unprotected, allowing anyone to modify task data.</p>
+                <p><strong>Cost of inaction:</strong> System remains completely unprotected, vulnerable to all attacks.</p>
+                <div class="option-grid">
+                    <div class="option">
+                        <h4>JWT tokens</h4>
+                        <p><strong>Pros:</strong> Stateless, scalable, industry standard</p>
+                        <p><strong>Cons:</strong> Requires client-side token management</p>
+                        <p><strong>Effort:</strong> Medium</p>
+                        <p><strong>Risk:</strong> Low</p>
+                    </div>
+                    <div class="option">
+                        <h4>API keys</h4>
+                        <p><strong>Pros:</strong> Simple to implement</p>
+                        <p><strong>Cons:</strong> Less secure, harder to revoke</p>
+                        <p><strong>Effort:</strong> Low</p>
+                        <p><strong>Risk:</strong> Medium</p>
+                    </div>
+                    <div class="option">
+                        <h4>OAuth2</h4>
+                        <p><strong>Pros:</strong> Most secure, supports third-party auth</p>
+                        <p><strong>Cons:</strong> Complex to implement</p>
+                        <p><strong>Effort:</strong> High</p>
+                        <p><strong>Risk:</strong> Low</p>
+                    </div>
+                </div>
+                <p><strong>Recommendation:</strong> Start with JWT tokens for balance of security and simplicity.</p>
+            </div>
+            
+            <div class="decision-card">
+                <h3>Choose data storage backend</h3>
+                <p><strong>Context:</strong> File-based storage causes race conditions and limits scalability.</p>
+                <p><strong>Cost of inaction:</strong> Data corruption under concurrent load, eventual system failure.</p>
+                <div class="option-grid">
+                    <div class="option">
+                        <h4>Keep file-based (with locking)</h4>
+                        <p><strong>Pros:</strong> No migration needed, simple</p>
+                        <p><strong>Cons:</strong> Still unscalable, complex locking</p>
+                        <p><strong>Effort:</strong> Low</p>
+                        <p><strong>Risk:</strong> High</p>
+                    </div>
+                    <div class="option">
+                        <h4>Migrate to SQLite</h4>
+                        <p><strong>Pros:</strong> ACID compliant, no server needed</p>
+                        <p><strong>Cons:</strong> Still single-writer limitations</p>
+                        <p><strong>Effort:</strong> Medium</p>
+                        <p><strong>Risk:</strong> Low</p>
+                    </div>
+                    <div class="option">
+                        <h4>Migrate to PostgreSQL</h4>
+                        <p><strong>Pros:</strong> Production-ready, scalable</p>
+                        <p><strong>Cons:</strong> Requires database server</p>
+                        <p><strong>Effort:</strong> High</p>
+                        <p><strong>Risk:</strong> Low</p>
+                    </div>
+                </div>
+                <p><strong>Recommendation:</strong> Migrate to SQLite for immediate ACID compliance with minimal operational overhead.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

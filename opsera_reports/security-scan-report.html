@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Scan Report - task-manager</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2, h3 { color: #333; }
+        .section { margin-bottom: 30px; }
+        .finding { margin-bottom: 15px; padding: 10px; border-left: 5px solid; }
+        .critical { border-color: #dc3545; background: #f8d7da; }
+        .high { border-color: #fd7e14; background: #fff3cd; }
+        .medium { border-color: #ffc107; background: #fff3cd; }
+        .low { border-color: #28a745; background: #d4edda; }
+    </style>
+</head>
+<body>
+    <h1>Security Scan Report - task-manager</h1>
+    <p>Scan completed on 14 April 2026</p>
+    
+    <div class="section">
+        <h2>Scan Summary</h2>
+        <p><strong>Path:</strong> .</p>
+        <p><strong>Scan Type:</strong> full</p>
+        <p><strong>Severity Threshold:</strong> all</p>
+        <p><strong>Tools Used:</strong> gitleaks, semgrep (grype, checkov, hadolint skipped)</p>
+    </div>
+    
+    <div class="section">
+        <h2>Risk Assessment</h2>
+        <ul>
+            <li><strong>Critical Issues:</strong> 0</li>
+            <li><strong>High Issues:</strong> 1</li>
+            <li><strong>Medium Issues:</strong> 4</li>
+            <li><strong>Low Issues:</strong> 0</li>
+            <li><strong>Overall Risk Score:</strong> Medium</li>
+        </ul>
+    </div>
+    
+    <div class="section">
+        <h2>Findings</h2>
+        
+        <div class="finding high">
+            <h3>Cross-Site Scripting (XSS) Vulnerability</h3>
+            <p><strong>Location:</strong> templates/index.html (lines 88-94)</p>
+            <p><strong>Description:</strong> Task titles are inserted into the DOM without sanitization using innerHTML and template literals.</p>
+            <p><strong>Impact:</strong> Stored XSS allowing script execution in users' browsers.</p>
+            <p><strong>Remediation:</strong> Sanitize user input or use textContent instead of innerHTML for dynamic content.</p>
+        </div>
+        
+        <div class="finding medium">
+            <h3>Debug Mode Enabled</h3>
+            <p><strong>Location:</strong> app.py (line 73)</p>
+            <p><strong>Description:</strong> Application runs with debug=True.</p>
+            <p><strong>Impact:</strong> Information disclosure in production.</p>
+            <p><strong>Remediation:</strong> Set debug=False for production deployments.</p>
+        </div>
+        
+        <div class="finding medium">
+            <h3>No Authentication</h3>
+            <p><strong>Location:</strong> All routes in app.py</p>
+            <p><strong>Description:</strong> No authentication or authorization mechanisms.</p>
+            <p><strong>Impact:</strong> Anyone can access the API.</p>
+            <p><strong>Remediation:</strong> Implement user authentication and authorization.</p>
+        </div>
+        
+        <div class="finding medium">
+            <h3>No Input Validation</h3>
+            <p><strong>Location:</strong> app.py (lines 30-50)</p>
+            <p><strong>Description:</strong> Limited input validation.</p>
+            <p><strong>Impact:</strong> Potential for malformed data.</p>
+            <p><strong>Remediation:</strong> Add comprehensive input validation.</p>
+        </div>
+        
+        <div class="finding medium">
+            <h3>No HTTPS Enforcement</h3>
+            <p><strong>Location:</strong> Application configuration</p>
+            <p><strong>Description:</strong> No TLS/HTTPS configuration.</p>
+            <p><strong>Impact:</strong> Data transmitted in plain text.</p>
+            <p><strong>Remediation:</strong> Configure HTTPS.</p>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>Recommendations</h2>
+        <ol>
+            <li>Fix XSS vulnerability by sanitizing user input.</li>
+            <li>Disable debug mode for production.</li>
+            <li>Implement authentication and authorization.</li>
+            <li>Add input validation and sanitization.</li>
+            <li>Configure HTTPS and security headers.</li>
+        </ol>
+    </div>
+</body>
+</html>

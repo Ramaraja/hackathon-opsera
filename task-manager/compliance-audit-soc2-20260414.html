@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC2 Compliance Audit Report - Application Scope</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #fff; padding: 20px; border-bottom: 1px solid #ddd; }
+        .header h1 { margin: 0; color: #333; }
+        .sidebar { width: 200px; position: fixed; top: 80px; left: 0; height: 100%; background: #fff; border-right: 1px solid #ddd; padding: 20px; }
+        .page-main { margin-left: 220px; padding: 20px; }
+        .act-divider { font-size: 24px; font-weight: bold; margin: 40px 0 20px 0; color: #007acc; }
+        .section { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .score-ring { width: 100px; height: 100px; }
+        .control { margin-bottom: 20px; padding: 15px; border-left: 5px solid; }
+        .control.fail { border-color: #d9534f; }
+        .control.partial { border-color: #f0ad4e; }
+        .severity { padding: 5px 10px; border-radius: 3px; color: white; }
+        .severity-critical { background: #d9534f; }
+        .severity-high { background: #f0ad4e; }
+        .severity-medium { background: #5bc0de; }
+        .sprint-card { background: #e8f5e8; padding: 15px; border-radius: 5px; }
+        .decision-card { background: #fff3cd; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+        .option-card { background: #f8f9fa; padding: 10px; margin: 5px; border-radius: 3px; }
+        .checklist-item { margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f2f2f2; }
+        pre { background: #f8f8f8; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        .footer { background: #333; color: white; text-align: center; padding: 10px; position: fixed; bottom: 0; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SOC2 Compliance Audit Report - Application Scope</h1>
+        <p>Generated on 14 April 2026</p>
+    </div>
+    <div class="sidebar">
+        <h3>Navigation</h3>
+        <ul>
+            <li><a href="#compliance-posture">Compliance Posture</a></li>
+            <li><a href="#status-overview">Status Overview</a></li>
+            <li><a href="#framework-coverage">Framework Coverage</a></li>
+            <li><a href="#evidence-inventory">Evidence Inventory</a></li>
+            <li><a href="#failing-controls">Failing Controls</a></li>
+            <li><a href="#partial-controls">Partial Controls</a></li>
+            <li><a href="#quick-wins">Quick Wins</a></li>
+            <li><a href="#fix-this-sprint">Fix This Sprint</a></li>
+            <li><a href="#plan-next-quarter">Plan Next Quarter</a></li>
+            <li><a href="#decisions">Decisions</a></li>
+            <li><a href="#audit-readiness">Audit Readiness</a></li>
+        </ul>
+    </div>
+    <div class="page-main">
+        <div class="act-divider">Act 1 — Compliance Posture</div>
+        <section id="compliance-posture" class="section">
+            <h2>Compliance Score</h2>
+            <div class="compliance-score">
+                <svg class="score-ring" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" stroke="#ddd" stroke-width="10" fill="none"/>
+                    <circle cx="50" cy="50" r="40" stroke="#d9534f" stroke-width="10" fill="none" stroke-dasharray="251.2" stroke-dashoffset="200.96" transform="rotate(-90 50 50)"/>
+                </svg>
+                <div style="text-align: center; font-size: 24px; font-weight: bold;">20%</div>
+            </div>
+            <div class="score-breakdown">
+                <p>Access Control: 0%</p>
+                <p>Encryption: 0%</p>
+                <p>Logging: 0%</p>
+                <p>Change Management: 50%</p>
+                <p>Vulnerability Management: 30%</p>
+            </div>
+        </section>
+        <section id="status-overview" class="section">
+            <h2>Status Overview</h2>
+            <div class="status-grid">
+                <div class="status-card" style="background: #d4edda; color: #155724;">Passing: 0 controls</div>
+                <div class="status-card" style="background: #fff3cd; color: #856404;">Partial: 2 controls</div>
+                <div class="status-card" style="background: #f8d7da; color: #721c24;">Failing: 3 controls</div>
+            </div>
+        </section>
+        <section id="framework-coverage" class="section">
+            <h2>Framework Coverage</h2>
+            <table>
+                <tr><th>Framework</th><th>Controls Tested</th><th>Passing</th><th>Partial</th><th>Failing</th><th>Score</th></tr>
+                <tr><td>SOC2</td><td>5</td><td>0</td><td>2</td><td>3</td><td>20%</td></tr>
+            </table>
+        </section>
+        <section id="evidence-inventory" class="section">
+            <h2>Evidence Inventory</h2>
+            <table>
+                <tr><th>Type</th><th>Items</th></tr>
+                <tr><td>Collected</td><td>app.py, requirements.txt, Dockerfile, Jenkinsfile, .github/workflows/ci.yml, README.md</td></tr>
+                <tr><td>Missing</td><td>DR plan, penetration test results, security policies</td></tr>
+                <tr><td>Expired</td><td>None</td></tr>
+            </table>
+        </section>
+        <div class="act-divider">Act 2 — Gaps & Findings</div>
+        <section id="failing-controls" class="section">
+            <h2>Failing Controls</h2>
+            <div class="control fail">
+                <div class="control-header">
+                    <span><span class="control-id">CC6.1</span> — Logical Access Controls</span>
+                    <span class="severity severity-critical">Critical</span>
+                </div>
+                <div class="control-body">
+                    <p>No authentication implemented on any API endpoints. All routes are unauthenticated.</p>
+                    <p>Evidence: app.py:25, app.py:30, app.py:46, app.py:61</p>
+                    <div class="attack-complexity"><span class="ac-badge ac-none">No barrier</span></div>
+                    <p><strong>Framework mapping:</strong> SOC2 CC6.1</p>
+                    <pre>@@ -1,6 +1,10 @@
+ from flask import Flask, jsonify, request, render_template
+ import json
+ import os
++import secrets
++
++def require_api_key(f):
++    def decorated_function(*args, **kwargs):
++        auth_header = request.headers.get('Authorization')
++        if not auth_header or not auth_header.startswith('Bearer '):
++            return jsonify({'error': 'Missing or invalid API key'}), 401
++        token = auth_header.split(' ')[1]
++        # TODO: Implement proper token validation
++        if token != 'valid-token':  # Replace with real validation
++            return jsonify({'error': 'Invalid token'}), 401
++        return f(*args, **kwargs)
++    decorated_function.__name__ = f.__name__
++    return decorated_function
+ 
+ app = Flask(__name__)
+ 
+@@ -23,1 +27,1 @@
+ @app.route('/tasks', methods=['GET'])
++@require_api_key
+ def get_tasks():
+@@ -28,1 +32,1 @@
+ @app.route('/tasks', methods=['POST'])
++@require_api_key
+ def create_task():
+@@ -44,1 +48,1 @@
+ @app.route('/tasks/<int:task_id>', methods=['PUT'])
++@require_api_key
+ def update_task(task_id):
+@@ -59,1 +63,1 @@
+ @app.route('/tasks/<int:task_id>', methods=['DELETE'])
++@require_api_key
+ def delete_task(task_id):</pre>
+                </div>
+            </div>
+            <div class="control fail">
+                <div class="control-header">
+                    <span><span class="control-id">CC6.7</span> — Encryption</span>
+                    <span class="severity severity-critical">Critical</span>
+                </div>
+                <div class="control-body">
+                    <p>No TLS/HTTPS enforcement, all traffic transmitted in plain text.</p>
+                    <p>Evidence: app.py</p>
+                    <p><strong>Framework mapping:</strong> SOC2 CC6.7</p>
+                    <pre>@@ -1,6 +1,7 @@
+ from flask import Flask, jsonify, request, render_template
+ import json
+ import os
++from flask_talisman import Talisman
+ 
+ app = Flask(__name__)
+ 
+@@ -6,2 +7,4 @@
+ app = Flask(__name__)
++Talisman(app, content_security_policy=None)
+ 
+ # JSON file path</pre>
+                </div>
+            </div>
+            <div class="control fail">
+                <div class="control-header">
+                    <span><span class="control-id">CC7.1</span> — Audit Logging</span>
+                    <span class="severity severity-high">High</span>
+                </div>
+                <div class="control-body">
+                    <p>No logging of API access, changes, or security events.</p>
+                    <p>Evidence: app.py</p>
+                    <p><strong>Framework mapping:</strong> SOC2 CC7.1</p>
+                    <pre>@@ -1,6 +1,8 @@
+ from flask import Flask, jsonify, request, render_template
+ import json
+ import os
++import logging
+ 
+ app = Flask(__name__)
+ 
+@@ -6,2 +8,6 @@
+ app = Flask(__name__)
++
++logging.basicConfig(level=logging.INFO, filename='app.log', format='%(asctime)s - %(levelname)s - %(message)s')
++logger = logging.getLogger(__name__)
+ 
+ # JSON file path
+@@ -25,1 +29,3 @@
+ @app.route('/tasks', methods=['GET'])
+ def get_tasks():
++    logger.info(f'GET /tasks from {request.remote_addr}')
+     tasks = load_tasks()
+@@ -30,1 +34,3 @@
+ @app.route('/tasks', methods=['POST'])
+ def create_task():
++    logger.info(f'POST /tasks from {request.remote_addr}')
+     task = request.get_json()
+@@ -46,1 +50,3 @@
+ @app.route('/tasks/<int:task_id>', methods=['PUT'])
+ def update_task(task_id):
++    logger.info(f'PUT /tasks/{task_id} from {request.remote_addr}')
+     tasks = load_tasks()
+@@ -61,1 +65,3 @@
+ @app.route('/tasks/<int:task_id>', methods=['DELETE'])
+ def delete_task(task_id):
++    logger.info(f'DELETE /tasks/{task_id} from {request.remote_addr}')
+     tasks = load_tasks()</pre>
+                </div>
+            </div>
+        </section>
+        <section id="partial-controls" class="section">
+            <h2>Partial Controls</h2>
+            <div class="control partial">
+                <div class="control-header">
+                    <span><span class="control-id">CC8.1</span> — Change Management</span>
+                    <span class="severity severity-medium">Medium</span>
+                </div>
+                <div class="control-body">
+                    <p>CI/CD pipelines exist but lack security gates.</p>
+                    <p>Evidence: Jenkinsfile, .github/workflows/ci.yml</p>
+                    <p><strong>Framework mapping:</strong> SOC2 CC8.1</p>
+                </div>
+            </div>
+            <div class="control partial">
+                <div class="control-header">
+                    <span><span class="control-id">CC7.2</span> — Vulnerability Management</span>
+                    <span class="severity severity-high">High</span>
+                </div>
+                <div class="control-body">
+                    <p>Bandit in requirements but not used in CI/CD.</p>
+                    <p>Evidence: requirements.txt</p>
+                    <p><strong>Framework mapping:</strong> SOC2 CC7.2</p>
+                </div>
+            </div>
+        </section>
+        <div class="act-divider">Act 3 — Remediation & Roadmap</div>
+        <section id="quick-wins" class="section">
+            <h2>Quick Wins</h2>
+            <div class="sprint-card">
+                <h3>Quick Wins Sprint (Estimated: 135 minutes)</h3>
+                <ul>
+                    <li>Disable debug mode (10 min)</li>
+                    <li>Add TLS enforcement (15 min)</li>
+                    <li>Add audit logging (30 min)</li>
+                    <li>Add file locking (45 min)</li>
+                    <li>Add exception handling (35 min)</li>
+                </ul>
+                <div class="pr-description">
+                    <h4>Pull Request Description</h4>
+                    <p>Fix critical SOC2 compliance gaps: disable debug mode, enforce TLS, add audit logging, prevent race conditions, and handle exceptions.</p>
+                </div>
+            </div>
+        </section>
+        <section id="fix-this-sprint" class="section">
+            <h2>Fix This Sprint</h2>
+            <table>
+                <tr><th>Action</th><th>Effort</th><th>Control IDs</th><th>Compliance Impact</th></tr>
+                <tr><td>Add authentication</td><td>60 min</td><td>CC6.1</td><td>Critical</td></tr>
+                <tr><td>Disable debug mode</td><td>10 min</td><td>CC6.1</td><td>High</td></tr>
+                <tr><td>Enforce TLS</td><td>15 min</td><td>CC6.7</td><td>Critical</td></tr>
+                <tr><td>Add logging</td><td>30 min</td><td>CC7.1</td><td>High</td></tr>
+                <tr><td>Add file locking</td><td>45 min</td><td>CC7.1</td><td>Medium</td></tr>
+                <tr><td>Add exception handling</td><td>35 min</td><td>CC7.1</td><td>High</td></tr>
+            </table>
+        </section>
+        <section id="plan-next-quarter" class="section">
+            <h2>Plan Next Quarter</h2>
+            <table>
+                <tr><th>Action</th><th>Effort</th><th>Prerequisites</th><th>Controls</th></tr>
+                <tr><td>Implement proper auth (JWT)</td><td>2 weeks</td><td>Auth model decision</td><td>CC6.1</td></tr>
+                <tr><td>Upgrade to database</td><td>1 week</td><td>Storage decision</td><td>CC7.1</td></tr>
+                <tr><td>Add security scanning to CI/CD</td><td>3 days</td><td>None</td><td>CC7.2, CC8.1</td></tr>
+            </table>
+        </section>
+        <section id="decisions" class="section">
+            <h2>Decisions</h2>
+            <div class="decision-card">
+                <h3>Authentication Model Selection</h3>
+                <p>Choose between API keys, JWT tokens, or OAuth2 for securing the API.</p>
+                <div class="inaction-cost">API remains unsecured indefinitely</div>
+                <div class="option-grid">
+                    <div class="option-card">API keys (simple, stateless)</div>
+                    <div class="option-card">JWT tokens (scalable, self-contained)</div>
+                    <div class="option-card">OAuth2 (enterprise-grade, complex)</div>
+                </div>
+            </div>
+            <div class="decision-card">
+                <h3>Data Storage Upgrade</h3>
+                <p>Replace JSON file storage with proper database for concurrency and reliability.</p>
+                <div class="inaction-cost">Data corruption and scaling limits persist</div>
+                <div class="option-grid">
+                    <div class="option-card">SQLite (simple, file-based)</div>
+                    <div class="option-card">PostgreSQL (robust, concurrent)</div>
+                    <div class="option-card">MongoDB (document-oriented)</div>
+                </div>
+            </div>
+        </section>
+        <section id="audit-readiness" class="section">
+            <h2>Audit Readiness Checklist</h2>
+            <div class="checklist-item">❌ Implement authentication</div>
+            <div class="checklist-item">❌ Enforce TLS</div>
+            <div class="checklist-item">❌ Add audit logging</div>
+            <div class="checklist-item">⚠️ Add security scanning to CI/CD</div>
+            <div class="checklist-item">❌ Upgrade storage</div>
+            <div class="checklist-item">❌ Document security policies</div>
+        </section>
+    </div>
+    <div class="footer">
+        <p>Generated by OPSERA Compliance Audit Tool</p>
+    </div>
+</body>
+</html>
